@@ -1,6 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const AdminDashboard = () => {
@@ -20,7 +21,10 @@ const AdminDashboard = () => {
   });
 
   // student state  
+
+    const navigate = useNavigate();
   const [searchStudent, setSearchStudent] = useState("");
+  const [filterClass, setFilterClass] = useState("All")
   const [students, setStudents] = useState(() => {
     const savedStudents = localStorage.getItem("schoolStudents");
 
@@ -36,8 +40,25 @@ const AdminDashboard = () => {
   const [parentEmail, setParentEmail] = useState("");
   const [parentPhone, setParentPhone] = useState("");
 
+  // Personal Details
+const [dateOfBirth, setDateOfBirth] = useState("");
+const [gender, setGender] = useState("");
+const [admissionDate, setAdmissionDate] = useState("");
+const [studentAddress, setStudentAddress] = useState("");
+const [section, setSection] = useState("");
 
-  // student delete funvtionality
+// Parent Details
+const [motherName, setMotherName] = useState("");
+const [fatherOccupation, setFatherOccupation] = useState("");
+const [motherOccupation, setMotherOccupation] = useState("");
+
+// Academic Details
+const [previousSchool, setPreviousSchool] = useState("");
+const [previousClass, setPreviousClass] = useState("");
+const [admissionType, setAdmissionType] = useState("New");
+
+
+  // student delete functionality
 
   const handleDeleteStudent = (studentId) => {
     const confirmDelete = window.confirm(
@@ -64,6 +85,17 @@ const AdminDashboard = () => {
     setParentName(student.parentName);
     setParentEmail(student.parentEmail);
     setParentPhone(student.parentPhone || "");
+    setDateOfBirth(student.dateOfBirth || "");
+setGender(student.gender || "");
+setAdmissionDate(student.admissionDate || "");
+setStudentAddress(student.address || "");
+setMotherName(student.motherName || "");
+setFatherOccupation(student.fatherOccupation || "");
+setMotherOccupation(student.motherOccupation || "");
+setPreviousSchool(student.previousSchool || "");
+setPreviousClass(student.previousClass || "");
+setSection(student.section || "");
+setAdmissionType(student.admissionType || "New");
 
     setEditingStudentId(student.id);
     setShowStudentForm(true);
@@ -73,10 +105,17 @@ const AdminDashboard = () => {
   const filteredStudents = students.filter((student) => {
     const searchText = searchStudent.toLowerCase().trim();
 
-    return (
+    const matchClass =
+      filterClass === "All" || student.class === filterClass;
+
+    const matchSearch =
       student.name.toLowerCase().includes(searchText) ||
       String(student.rollNumber).toLowerCase().includes(searchText)
-    );
+
+
+
+    return( matchSearch && matchClass)
+
   });
 
   const totalTeachers = teachers.length;
@@ -143,7 +182,7 @@ const AdminDashboard = () => {
     localStorage.setItem("schoolStudents", JSON.stringify(students));
   }, [students]);
 
-
+ 
 
   return (
     <main className="min-h-screen bg-page p-6">
@@ -550,6 +589,27 @@ const AdminDashboard = () => {
                 >
                   {editingTeacherId !== null ? "Save Changes" : "Save Teacher"}
                 </button>
+
+                <button
+  type="button"
+  onClick={() => {
+    setshowTeacherForm(false);
+    setEditingTeacherId(null);
+
+    setTeacherName("");
+    setTeacherEmail("");
+    setSubject("");
+    setAssignedClasses("");
+    setSalary("");
+    setTeacherPassword("");
+    setTeacherRole("Subject Teacher");
+    setClassTeacherOf("");
+  }}
+  className="w-1/3 mx-1 rounded-lg border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-100"
+  // className="1/2 rounded-lg bg-navy px-5 py-3 font-semibold text-white transition hover:bg-blue"
+>
+  Cancel
+</button>
               </div>
             </form>
           )}
@@ -661,6 +721,18 @@ const AdminDashboard = () => {
               setParentName("");
               setParentEmail("");
               setParentPhone("");
+              setDateOfBirth("");
+setGender("");
+setAdmissionDate("");
+setStudentAddress("");
+setMotherName("");
+setFatherOccupation("");
+setMotherOccupation("");
+setPreviousSchool("");
+setPreviousClass("");
+setSection("");
+setAdmissionType("New");
+setEditingStudentId(null);
               setShowStudentForm(true);
             }}
           >
@@ -694,7 +766,7 @@ const AdminDashboard = () => {
                 return;
               }
 
-              
+
 
               if (editingStudentId !== null) {
                 setStudents((prevStudents) =>
@@ -708,6 +780,17 @@ const AdminDashboard = () => {
                         parentName: parentName.trim(),
                         parentEmail: parentEmail.trim().toLowerCase(),
                         parentPhone: parentPhone.trim(),
+                        dateOfBirth,
+gender,
+admissionDate,
+address: studentAddress.trim(),
+motherName: motherName.trim(),
+fatherOccupation: fatherOccupation.trim(),
+motherOccupation: motherOccupation.trim(),
+previousSchool: previousSchool.trim(),
+previousClass,
+section,
+admissionType,
                       }
                       : student
                   )
@@ -723,6 +806,17 @@ const AdminDashboard = () => {
                   parentName: parentName.trim(),
                   parentEmail: parentEmail.trim().toLowerCase(),
                   parentPhone: parentPhone.trim(),
+                  dateOfBirth,
+gender,
+admissionDate,
+address: studentAddress.trim(),
+motherName: motherName.trim(),
+fatherOccupation: fatherOccupation.trim(),
+motherOccupation: motherOccupation.trim(),
+previousSchool: previousSchool.trim(),
+previousClass,
+section,
+admissionType,
                 };
 
                 setStudents((prevStudents) => [...prevStudents, newStudent]);
@@ -736,6 +830,17 @@ const AdminDashboard = () => {
               setParentName("");
               setParentEmail("");
               setParentPhone("");
+              setDateOfBirth("");
+setGender("");
+setAdmissionDate("");
+setStudentAddress("");
+setMotherName("");
+setFatherOccupation("");
+setMotherOccupation("");
+setPreviousSchool("");
+setPreviousClass("");
+setSection("");
+setAdmissionType("New");
               setEditingStudentId(null);
               setShowStudentForm(false);
 
@@ -754,6 +859,63 @@ const AdminDashboard = () => {
                 placeholder="Enter student name"
               />
             </div>
+
+            <div>
+  <label className="mb-1 block text-sm font-medium">
+    Date of Birth
+  </label>
+
+  <input
+    type="date"
+    value={dateOfBirth}
+    onChange={(e) => setDateOfBirth(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Gender
+  </label>
+
+  <select
+    value={gender}
+    onChange={(e) => setGender(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  >
+    <option value="">Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+    <option value="Other">Other</option>
+  </select>
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Admission Date
+  </label>
+
+  <input
+    type="date"
+    value={admissionDate}
+    onChange={(e) => setAdmissionDate(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Student Address
+  </label>
+
+  <textarea
+    value={studentAddress}
+    onChange={(e) => setStudentAddress(e.target.value)}
+    rows={3}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+    placeholder="Enter student address"
+  />
+</div>
 
             <div>
               <label className="mb-1 block text-sm font-medium">
@@ -806,6 +968,119 @@ const AdminDashboard = () => {
             </div>
 
             <div>
+  <label className="mb-1 block text-sm font-medium">
+    Mother's Name
+  </label>
+
+  <input
+    type="text"
+    value={motherName}
+    onChange={(e) => setMotherName(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+    placeholder="Enter mother's name"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Father's Occupation
+  </label>
+
+  <input
+    type="text"
+    value={fatherOccupation}
+    onChange={(e) => setFatherOccupation(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+    placeholder="Enter father's occupation"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Mother's Occupation
+  </label>
+
+  <input
+    type="text"
+    value={motherOccupation}
+    onChange={(e) => setMotherOccupation(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+    placeholder="Enter mother's occupation"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Previous School
+  </label>
+
+  <input
+    type="text"
+    value={previousSchool}
+    onChange={(e) => setPreviousSchool(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+    placeholder="Enter previous school name"
+  />
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Previous Class
+  </label>
+
+  <select
+    value={previousClass}
+    onChange={(e) => setPreviousClass(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  >
+    <option value="">Select Previous Class</option>
+    <option value="Nursery">Nursery</option>
+    <option value="LKG">LKG</option>
+    <option value="UKG">UKG</option>
+
+    {Array.from({ length: 12 }, (_, i) => (
+      <option key={i + 1} value={`Class ${i + 1}`}>
+        Class {i + 1}
+      </option>
+    ))}
+  </select>
+</div>
+
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Section
+  </label>
+
+  <select
+    value={section}
+    onChange={(e) => setSection(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  >
+    <option value="">Select Section</option>
+    <option value="A">Section A</option>
+    <option value="B">Section B</option>
+    <option value="C">Section C</option>
+    <option value="D">Section D</option>
+  </select>
+</div>
+
+<div>
+  <label className="mb-1 block text-sm font-medium">
+    Admission Type
+  </label>
+
+  <select
+    value={admissionType}
+    onChange={(e) => setAdmissionType(e.target.value)}
+    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-600"
+  >
+    <option value="New">New Admission</option>
+    <option value="Transfer">Transfer Admission</option>
+  </select>
+</div>
+
+            <div>
               <label className="mb-1 block text-sm font-medium">
                 Parent Email
               </label>
@@ -852,6 +1127,17 @@ const AdminDashboard = () => {
                   setParentName("");
                   setParentEmail("");
                   setParentPhone("");
+                  setDateOfBirth("");
+setGender("");
+setAdmissionDate("");
+setStudentAddress("");
+setMotherName("");
+setFatherOccupation("");
+setMotherOccupation("");
+setPreviousSchool("");
+setPreviousClass("");
+setSection("");
+setAdmissionType("New");
                 }}
                 className="rounded-lg border border-slate-300 px-5 py-3 font-semibold text-slate-700 hover:bg-slate-100"
               >
@@ -861,10 +1147,10 @@ const AdminDashboard = () => {
           </form>
         )}
 
-        {/* filter student by roll nuymber or name  */}
+        {/* filter student by roll number or name  */}
 
 
-        <div className="mt-5 mb-3">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center">
           <input
             type="text"
             placeholder="Search by student name or roll number..."
@@ -872,6 +1158,22 @@ const AdminDashboard = () => {
             onChange={(e) => setSearchStudent(e.target.value)}
             className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-blue sm:max-w-md"
           />
+
+          <select
+            value={filterClass}
+            onChange={(e) => setFilterClass(e.target.value)}
+            className="w-1/2 cursor-pointer rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm outline-none focus:border-blue-900 focus:ring-2 focus:ring-blue-900/20"
+          >
+            <option value="All">All Classes</option>
+           <option value="Nursery">Nursery</option>
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+                {Array.from({ length: 12 }, (_, i) => (
+                  <option key={i + 1} value={`Class ${i + 1}`}>
+                    Class {i + 1}
+                  </option>
+                ))}
+          </select>
         </div>
 
 
@@ -895,7 +1197,12 @@ const AdminDashboard = () => {
                 filteredStudents.map((student) => (
                   <tr key={student.id}>
                     <td className="px-5 py-4 font-medium text-slate-800">
+
+                      <button
+                      onClick={()=> navigate(`/students/${student.id}`)}
+                       className="font-semibold text-slate-800 transition hover:text-blue-700 hover:underline">
                       {student.name}
+                      </button>
                     </td>
                     <td className="px-5 py-4">{student.class}</td>
                     <td className="px-5 py-4">{student.rollNumber}</td>

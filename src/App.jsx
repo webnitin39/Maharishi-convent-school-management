@@ -15,6 +15,7 @@ import StudentDashboard from "./pages/StudentDashboard"
 import TeacherDashboard from "./pages/TeacherDashboards"
 import AdminDashboard from "./pages/AdminDashboards"
 import TeacherDetails from "./pages/TeacherDetails"
+import StudentDetails from "./pages/StudentDetails"
 
 
 
@@ -39,6 +40,8 @@ function App() {
         <Route path="/teacher-dashboard" element={<TeacherDashboard/>} />
         <Route path="/admin-dashboard" element={<AdminDashboard/>} />
         <Route path="/teachers/:id" element={<TeacherDetails/>} />
+        <Route path="/students/:id" element={<StudentDetails/>} />
+
 
 
 
